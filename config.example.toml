@@ -1,0 +1,20 @@
+[log]
+level = "debug"
+
+[ip]
+ipv4 = "https://myip.ipip.net/s"
+ipv6 = "https://myip6.ipip.net/s"
+
+[service]
+interval = 600
+
+[services]
+
+[service.cf]
+type = "cloudflare"
+protocol = "ipv6"
+# https://developers.cloudflare.com/fundamentals/api/get-started/create-token/
+token = ""
+# home.example.com
+zone = "example.com"
+record = "home"
