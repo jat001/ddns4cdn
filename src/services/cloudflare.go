@@ -6,6 +6,8 @@ import (
 )
 
 type Cloudflare struct {
+	ADDR4    string
+	ADDR6    string
 	Type     string
 	Protocol string
 	Token    string
@@ -27,6 +29,7 @@ type record struct {
 	Content string `json:"content"`
 	Proxied bool   `json:"proxied"`
 	TTL     int    `json:"ttl"`
+	ZoneID  string `json:"zone_id"`
 }
 
 func (ctx *cloudflare) getZoneID() (string, bool) {
@@ -60,22 +63,8 @@ func (ctx *cloudflare) getZoneID() (string, bool) {
 	return resp.Result[0].ID, true
 }
 
-func (ctx *cloudflare) getRecord(zoneID string) (record, bool) {
+func (ctx *cloudflare) getRecord(zoneID, recordType string) (record, bool) {
 	url := ctx.Entrypoint + "{zoneID}/dns_records"
-
-	recordType := ""
-
-	switch ctx.Config.Protocol {
-	case "ipv4":
-		recordType = "A"
-
-	case "ipv6":
-		recordType = "AAAA"
-
-	default:
-		ctx.Logger.Error("Unknown protocol:", ctx.Config.Protocol)
-		return record{}, false
-	}
 
 	resp := struct {
 		Result []record `json:"result"`
@@ -107,18 +96,18 @@ func (ctx *cloudflare) getRecord(zoneID string) (record, bool) {
 	return resp.Result[0], true
 }
 
-func (ctx *cloudflare) updateRecord(record record) {
+func (ctx *cloudflare) updateRecord(record record, addr string) {
 	url := ctx.Entrypoint + "{zoneID}/dns_records/{recordID}"
 
 	r, err := ctx.Client.R().
 		SetPathParams(map[string]string{
-			"zoneID":   ctx.Config.Zone,
+			"zoneID":   record.ZoneID,
 			"recordID": record.ID,
 		}).
 		SetBody(map[string]interface{}{
 			"type":    record.Type,
 			"name":    record.Name,
-			"content": record.Content,
+			"content": addr,
 			"proxied": record.Proxied,
 			"ttl":     record.TTL,
 		}).
@@ -154,16 +143,33 @@ func (config *Cloudflare) Run() {
 		return
 	}
 
-	ctx.Logger.Debug(zoneID)
+	recordType := ""
+	addr := ""
 
-	record, ok := ctx.getRecord(zoneID)
-	if !ok {
+	switch ctx.Config.Protocol {
+	case "ipv4":
+		recordType = "A"
+		addr = ctx.Config.ADDR4
+
+	case "ipv6":
+		recordType = "AAAA"
+		addr = ctx.Config.ADDR6
+
+	default:
+		ctx.Logger.Error("Unknown protocol:", ctx.Config.Protocol)
 		return
 	}
 
-	ctx.Logger.Debug(record)
+	record, ok := ctx.getRecord(zoneID, recordType)
+	if !ok {
+		return
+	}
+	if record.Content == addr {
+		ctx.Logger.Info("No need to update")
+		return
+	}
 
-	ctx.updateRecord(record)
+	ctx.updateRecord(record, addr)
 
-	ctx.Logger.Info("Run Cloudflare Done")
+	ctx.Logger.Info("Update DNS record success")
 }

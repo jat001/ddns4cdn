@@ -29,8 +29,5 @@ func Start(raw []byte) {
 	}
 	core.Log.SetLevel(config.Log.Level)
 
-	addr6 := IP(config.IP.IPV6, "tcp6")
-	addr4 := IP(config.IP.IPV4, "tcp4")
-
-	Service(&config, addr4, addr6)
+	Service(&config)
 }

@@ -4,7 +4,7 @@ type Services interface {
 	Run()
 }
 
-func Start(ctx *Services, id string, cha chan string) {
+func Run(ctx *Services, id string, cha chan string) {
 	defer func() {
 		cha <- id
 	}()

@@ -1,6 +1,9 @@
 package core
 
 import (
+	"time"
+
+	nested "github.com/antonfisher/nested-logrus-formatter"
 	"github.com/sirupsen/logrus"
 )
 
@@ -10,7 +13,12 @@ type log struct {
 }
 
 func setFormatter() {
-	Logger.SetFormatter(&logrus.TextFormatter{})
+	Logger.SetFormatter(&nested.Formatter{
+		TimestampFormat: time.DateTime,
+		ShowFullLevel:   true,
+		HideKeys:        true,
+		FieldsOrder:     []string{"module", "submodule"},
+	})
 }
 
 func setLevel(level string) {

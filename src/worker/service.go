@@ -1,6 +1,7 @@
 package worker
 
 import (
+	"reflect"
 	"time"
 
 	"github.com/jat001/ddns4cdn/core"
@@ -9,14 +10,13 @@ import (
 )
 
 type service struct {
-	logger   core.LogEntry
-	config   *core.Config
-	services map[string]*services.Services
+	Logger   core.LogEntry
+	Config   *core.Config
+	Services map[string]*services.Services
 }
 
 func (ctx *service) parseConfig() {
-	for k, v := range ctx.config.Services {
-		ctx.logger.Debug("Service name:", k)
+	for k, v := range ctx.Config.Services {
 		t := v["type"].(string)
 
 		service := *new(services.Services)
@@ -26,28 +26,35 @@ func (ctx *service) parseConfig() {
 			service = &services.Cloudflare{}
 
 		default:
-			ctx.logger.Error("Unknown service type:", t)
+			ctx.Logger.Warn(k, ": unknown service type ", t)
 			continue
 		}
 
 		mapstructure.Decode(v, &service)
-		ctx.services[k] = &service
+		ctx.Services[k] = &service
 	}
 
-	ctx.logger.Debug("Services:", ctx.services)
+	ctx.Logger.Debug("Services:", ctx.Services)
 }
 
 func (ctx *service) run() {
 	m := make(map[string]bool)
 	c := make(chan string)
 	for {
-		for k, v := range ctx.services {
+		addr6 := IP(ctx.Config.IP.IPV6, "tcp6")
+		addr4 := IP(ctx.Config.IP.IPV4, "tcp4")
+
+		for k, v := range ctx.Services {
 			if val, ok := m[k]; ok && val {
-				ctx.logger.Debug("Skip running service:", k)
+				ctx.Logger.Debug("Skip running service: ", k)
 				continue
 			}
+			// ptr -> interface -> ptr -> struct
+			s := reflect.ValueOf(v).Elem().Elem().Elem()
+			s.FieldByName("ADDR4").SetString(addr4)
+			s.FieldByName("ADDR6").SetString(addr6)
 			m[k] = true
-			go services.Start(v, k, c)
+			go services.Run(v, k, c)
 		}
 
 		select {
@@ -55,22 +62,22 @@ func (ctx *service) run() {
 			m[k] = false
 
 		default:
-			ctx.logger.Debug("All services running")
+			ctx.Logger.Debug("All services running")
 		}
 
-		ctx.logger.Debugf("Wait %d seconds", ctx.config.Service.Interval)
-		time.Sleep(time.Second * time.Duration(ctx.config.Service.Interval))
+		ctx.Logger.Debugf("Wait %d seconds", ctx.Config.Service.Interval)
+		time.Sleep(time.Second * time.Duration(ctx.Config.Service.Interval))
 	}
 }
 
-func Service(config *core.Config, addr4, addr6 string) {
+func Service(config *core.Config) {
 	ctx := service{
-		logger: core.Logger.WithFields(core.LogFields{
+		Logger: core.Logger.WithFields(core.LogFields{
 			"module":   "worker",
 			"submoule": "service",
 		}),
-		config:   config,
-		services: make(map[string]*services.Services),
+		Config:   config,
+		Services: make(map[string]*services.Services),
 	}
 
 	ctx.parseConfig()

@@ -3,6 +3,7 @@ module github.com/jat001/ddns4cdn
 go 1.21.1
 
 require (
+	github.com/antonfisher/nested-logrus-formatter v1.3.1
 	github.com/go-resty/resty/v2 v2.8.0
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/pelletier/go-toml/v2 v2.1.0

@@ -29,11 +29,11 @@ func IP(url, network string) string {
 	}
 	resp, err := client.R().Get(url)
 	if err != nil {
-		ctx.Logger.Error("Get IP failed:", err)
+		ctx.Logger.Error("Get IP failed: ", err)
 		return ""
 	}
 
 	address := resp.String()
-	ctx.Logger.Info("Get IP", address)
+	ctx.Logger.Info(network, " IP address: ", address)
 	return address
 }
