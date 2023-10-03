@@ -1,9 +1,16 @@
 [log]
 level = "debug"
 
+[api]
+port = 8080
+
 [ip]
-ipv4 = "https://myip.ipip.net/s"
-ipv6 = "https://myip6.ipip.net/s"
+ipv4 = [
+  "https://myip.ipip.net/s"
+]
+ipv6 = [
+  "https://myip6.ipip.net/s"
+]
 
 [service]
 interval = 600

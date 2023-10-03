@@ -1,6 +1,9 @@
 package worker
 
 import (
+	"sync"
+
+	"github.com/jat001/ddns4cdn/api"
 	"github.com/jat001/ddns4cdn/core"
 	"github.com/pelletier/go-toml/v2"
 )
@@ -10,12 +13,10 @@ type worker struct {
 }
 
 func Start(raw []byte) {
-	core.Log.SetFormatter()
-
 	ctx := worker{
 		Logger: core.Logger.WithFields(core.LogFields{
 			"module":   "worker",
-			"submoule": "run",
+			"submoule": "start",
 		}),
 	}
 
@@ -27,7 +28,12 @@ func Start(raw []byte) {
 		ctx.Logger.Fatal(err)
 		return
 	}
+
 	core.Log.SetLevel(config.Log.Level)
 
-	Service(&config)
+	m := sync.Map{}
+
+	go Service(&config, &m)
+
+	api.API(&config, &m)
 }

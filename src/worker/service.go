@@ -2,6 +2,7 @@ package worker
 
 import (
 	"reflect"
+	"sync"
 	"time"
 
 	"github.com/jat001/ddns4cdn/core"
@@ -37,15 +38,17 @@ func (ctx *service) parseConfig() {
 	ctx.Logger.Debug("Services:", ctx.Services)
 }
 
-func (ctx *service) run() {
-	m := make(map[string]bool)
-	c := make(chan string)
+func (ctx *service) run(m *sync.Map) {
 	for {
-		addr6 := IP(ctx.Config.IP.IPV6, "tcp6")
-		addr4 := IP(ctx.Config.IP.IPV4, "tcp4")
+		addr6, ok6 := IP(ctx.Config.IP.IPV6, "tcp6")
+		addr4, ok4 := IP(ctx.Config.IP.IPV4, "tcp4")
+		if !ok6 || !ok4 {
+			ctx.Logger.Error("Get IP failed")
+			return
+		}
 
 		for k, v := range ctx.Services {
-			if val, ok := m[k]; ok && val {
+			if a, _ := m.LoadOrStore(k, false); a.(bool) {
 				ctx.Logger.Debug("Skip running service: ", k)
 				continue
 			}
@@ -53,24 +56,16 @@ func (ctx *service) run() {
 			s := reflect.ValueOf(v).Elem().Elem().Elem()
 			s.FieldByName("ADDR4").SetString(addr4)
 			s.FieldByName("ADDR6").SetString(addr6)
-			m[k] = true
-			go services.Run(v, k, c)
+			go services.Run(v, k, m)
 		}
 
-		select {
-		case k := <-c:
-			m[k] = false
-
-		default:
-			ctx.Logger.Debug("All services running")
-		}
-
-		ctx.Logger.Debugf("Wait %d seconds", ctx.Config.Service.Interval)
-		time.Sleep(time.Second * time.Duration(ctx.Config.Service.Interval))
+		s := time.Duration(ctx.Config.Service.Interval)
+		ctx.Logger.Debugf("Wait %d seconds", s)
+		time.Sleep(time.Second * s)
 	}
 }
 
-func Service(config *core.Config) {
+func Service(config *core.Config, m *sync.Map) {
 	ctx := service{
 		Logger: core.Logger.WithFields(core.LogFields{
 			"module":   "worker",
@@ -81,5 +76,5 @@ func Service(config *core.Config) {
 	}
 
 	ctx.parseConfig()
-	ctx.run()
+	ctx.run(m)
 }

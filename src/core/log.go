@@ -29,6 +29,11 @@ func setLevel(level string) {
 	Logger.SetLevel(l)
 }
 
+func init() {
+	setFormatter()
+	setLevel("debug")
+}
+
 type (
 	LogEntry  = *logrus.Entry
 	LogFields = logrus.Fields

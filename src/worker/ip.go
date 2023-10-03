@@ -9,10 +9,24 @@ import (
 )
 
 type ip struct {
-	Logger core.LogEntry
+	Logger  core.LogEntry
+	Client  *resty.Client
+	Network string
 }
 
-func IP(url, network string) string {
+func (ctx *ip) getAddr(url string) (string, bool) {
+	resp, err := ctx.Client.R().Get(url)
+	if err != nil {
+		ctx.Logger.Error("Get IP failed: ", err)
+		return "", false
+	}
+
+	address := resp.String()
+	ctx.Logger.Info(ctx.Network, " IP address: ", address)
+	return address, true
+}
+
+func IP(url []string, network string) (string, bool) {
 	client := resty.New().
 		SetTransport(&http.Transport{
 			Dial: func(_, addr string) (net.Conn, error) {
@@ -26,14 +40,14 @@ func IP(url, network string) string {
 			"module":   "worker",
 			"submoule": "ip",
 		}),
-	}
-	resp, err := client.R().Get(url)
-	if err != nil {
-		ctx.Logger.Error("Get IP failed: ", err)
-		return ""
+		Client:  client,
+		Network: network,
 	}
 
-	address := resp.String()
-	ctx.Logger.Info(network, " IP address: ", address)
-	return address
+	for _, v := range url {
+		if addr, ok := ctx.getAddr(v); ok {
+			return addr, true
+		}
+	}
+	return "", false
 }

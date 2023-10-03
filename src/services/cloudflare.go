@@ -128,7 +128,7 @@ func (config *Cloudflare) Run() {
 
 	ctx := cloudflare{
 		Logger: core.Logger.WithFields(core.LogFields{
-			"module":  "service",
+			"module":  "services",
 			"service": "cloudflare",
 		}),
 		Entrypoint: "https://api.cloudflare.com/client/v4/zones/",
