@@ -7,13 +7,17 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+type (
+	LogEntry  = logrus.Entry
+	LogFields = logrus.Fields
+)
+
 type log struct {
-	SetFormatter func()
-	SetLevel     func(string)
+	Logger *logrus.Logger
 }
 
-func setFormatter() {
-	Logger.SetFormatter(&nested.Formatter{
+func (ctx *log) SetFormatter() {
+	ctx.Logger.SetFormatter(&nested.Formatter{
 		TimestampFormat: time.DateTime,
 		ShowFullLevel:   true,
 		HideKeys:        true,
@@ -21,28 +25,14 @@ func setFormatter() {
 	})
 }
 
-func setLevel(level string) {
-	l, err := logrus.ParseLevel(level)
-	if err != nil {
+func (ctx *log) SetLevel(level string) {
+	l, e := logrus.ParseLevel(level)
+	if e != nil {
 		l = logrus.DebugLevel
 	}
-	Logger.SetLevel(l)
+	ctx.Logger.SetLevel(l)
 }
 
-func init() {
-	setFormatter()
-	setLevel("debug")
+var Log = log{
+	Logger: logrus.New(),
 }
-
-type (
-	LogEntry  = *logrus.Entry
-	LogFields = logrus.Fields
-)
-
-var (
-	Log = log{
-		SetFormatter: setFormatter,
-		SetLevel:     setLevel,
-	}
-	Logger = logrus.New()
-)

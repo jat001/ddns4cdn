@@ -16,3 +16,17 @@ type Config struct {
 	}
 	Services map[string]map[string]any
 }
+
+type ServiceConfig struct {
+	ADDR4    string
+	ADDR6    string
+	Type     string
+	Protocol string
+}
+
+type Cloudflare struct {
+	ServiceConfig
+	Token  string
+	Zone   string
+	Record string
+}

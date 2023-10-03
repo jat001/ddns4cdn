@@ -2,7 +2,6 @@ package worker
 
 import (
 	"reflect"
-	"sync"
 	"time"
 
 	"github.com/jat001/ddns4cdn/core"
@@ -11,7 +10,7 @@ import (
 )
 
 type service struct {
-	Logger   core.LogEntry
+	Logger   *core.LogEntry
 	Config   *core.Config
 	Services map[string]*services.Services
 }
@@ -27,18 +26,30 @@ func (ctx *service) parseConfig() {
 			service = &services.Cloudflare{}
 
 		default:
-			ctx.Logger.Warn(k, ": unknown service type ", t)
+			ctx.Logger.Error(k, ": unknown service type ", t)
 			continue
 		}
 
-		mapstructure.Decode(v, &service)
+		c := mapstructure.DecoderConfig{
+			Squash: true,
+			Result: &service,
+		}
+		d, e := mapstructure.NewDecoder(&c)
+		if e == nil {
+			e = d.Decode(v)
+		}
+		if e != nil {
+			ctx.Logger.Error(e)
+			continue
+		}
+
 		ctx.Services[k] = &service
 	}
 
 	ctx.Logger.Debug("Services:", ctx.Services)
 }
 
-func (ctx *service) run(m *sync.Map) {
+func (ctx *service) run() {
 	for {
 		addr6, ok6 := IP(ctx.Config.IP.IPV6, "tcp6")
 		addr4, ok4 := IP(ctx.Config.IP.IPV4, "tcp4")
@@ -48,15 +59,17 @@ func (ctx *service) run(m *sync.Map) {
 		}
 
 		for k, v := range ctx.Services {
-			if a, _ := m.LoadOrStore(k, false); a.(bool) {
+			if a, _ := core.Store.RunningService.LoadOrStore(k, false); a.(bool) {
 				ctx.Logger.Debug("Skip running service: ", k)
 				continue
 			}
+
 			// ptr -> interface -> ptr -> struct
 			s := reflect.ValueOf(v).Elem().Elem().Elem()
 			s.FieldByName("ADDR4").SetString(addr4)
 			s.FieldByName("ADDR6").SetString(addr6)
-			go services.Run(v, k, m)
+
+			go services.Run(v, k)
 		}
 
 		s := time.Duration(ctx.Config.Service.Interval)
@@ -65,9 +78,9 @@ func (ctx *service) run(m *sync.Map) {
 	}
 }
 
-func Service(config *core.Config, m *sync.Map) {
+func Service(config *core.Config) {
 	ctx := service{
-		Logger: core.Logger.WithFields(core.LogFields{
+		Logger: core.Log.Logger.WithFields(core.LogFields{
 			"module":   "worker",
 			"submoule": "service",
 		}),
@@ -76,5 +89,5 @@ func Service(config *core.Config, m *sync.Map) {
 	}
 
 	ctx.parseConfig()
-	ctx.run(m)
+	ctx.run()
 }

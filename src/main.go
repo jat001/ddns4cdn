@@ -15,5 +15,5 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	worker.Start(data)
+	worker.Worker(data)
 }

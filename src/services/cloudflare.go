@@ -5,18 +5,10 @@ import (
 	"github.com/jat001/ddns4cdn/core"
 )
 
-type Cloudflare struct {
-	ADDR4    string
-	ADDR6    string
-	Type     string
-	Protocol string
-	Token    string
-	Zone     string
-	Record   string
-}
+type Cloudflare core.Cloudflare
 
 type cloudflare struct {
-	Logger     core.LogEntry
+	Logger     *core.LogEntry
 	Entrypoint string
 	Config     *Cloudflare
 	Client     *resty.Client
@@ -127,7 +119,7 @@ func (config *Cloudflare) Run() {
 		SetAuthToken(config.Token)
 
 	ctx := cloudflare{
-		Logger: core.Logger.WithFields(core.LogFields{
+		Logger: core.Log.Logger.WithFields(core.LogFields{
 			"module":  "services",
 			"service": "cloudflare",
 		}),

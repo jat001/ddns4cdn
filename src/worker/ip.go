@@ -9,7 +9,7 @@ import (
 )
 
 type ip struct {
-	Logger  core.LogEntry
+	Logger  *core.LogEntry
 	Client  *resty.Client
 	Network string
 }
@@ -36,7 +36,7 @@ func IP(url []string, network string) (string, bool) {
 		SetRetryCount(3)
 
 	ctx := ip{
-		Logger: core.Logger.WithFields(core.LogFields{
+		Logger: core.Log.Logger.WithFields(core.LogFields{
 			"module":   "worker",
 			"submoule": "ip",
 		}),

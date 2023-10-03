@@ -1,7 +1,7 @@
 package worker
 
 import (
-	"sync"
+	"time"
 
 	"github.com/jat001/ddns4cdn/api"
 	"github.com/jat001/ddns4cdn/core"
@@ -9,14 +9,14 @@ import (
 )
 
 type worker struct {
-	Logger core.LogEntry
+	Logger *core.LogEntry
 }
 
-func Start(raw []byte) {
+func Worker(raw []byte) {
 	ctx := worker{
-		Logger: core.Logger.WithFields(core.LogFields{
+		Logger: core.Log.Logger.WithFields(core.LogFields{
 			"module":   "worker",
-			"submoule": "start",
+			"submoule": "worker",
 		}),
 	}
 
@@ -31,9 +31,20 @@ func Start(raw []byte) {
 
 	core.Log.SetLevel(config.Log.Level)
 
-	m := sync.Map{}
+	go func() {
+		for {
+			time.Sleep(time.Second)
+			select {
+			case s := <-core.Store.ServiceStats:
+				ctx.Logger.Debug(s)
+				core.Store.ServiceStats2 = append(core.Store.ServiceStats2, s)
+			default:
+				continue
+			}
+		}
+	}()
 
-	go Service(&config, &m)
+	go Service(&config)
 
-	api.API(&config, &m)
+	api.API(&config)
 }
