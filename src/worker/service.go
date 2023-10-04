@@ -1,7 +1,6 @@
 package worker
 
 import (
-	"reflect"
 	"time"
 
 	"github.com/jat001/ddns4cdn/core"
@@ -24,6 +23,12 @@ func (ctx *service) parseConfig() {
 		switch t {
 		case "cloudflare":
 			service = &services.Cloudflare{}
+
+		case "alibaba":
+			service = &services.Alibaba{}
+
+		case "tencent":
+			service = &services.Tencent{}
 
 		default:
 			ctx.Logger.Error(k, ": unknown service type ", t)
@@ -64,8 +69,7 @@ func (ctx *service) run() {
 				continue
 			}
 
-			// ptr -> interface -> ptr -> struct
-			s := reflect.ValueOf(v).Elem().Elem().Elem()
+			s := core.GetRealStruct(v)
 			s.FieldByName("ADDR4").SetString(addr4)
 			s.FieldByName("ADDR6").SetString(addr6)
 

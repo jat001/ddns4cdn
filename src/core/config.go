@@ -30,3 +30,17 @@ type Cloudflare struct {
 	Zone   string
 	Record string
 }
+
+type Alibaba struct {
+	ServiceConfig
+	AccessKey string `mapstructure:"access_key"`
+	SecretKey string `mapstructure:"secret_key"`
+	Domain    string
+}
+
+type Tencent struct {
+	ServiceConfig
+	AccessKey string `mapstructure:"access_key"`
+	SecretKey string `mapstructure:"secret_key"`
+	Domain    string
+}

@@ -25,3 +25,23 @@ token = ""
 # home.example.com
 zone = "example.com"
 record = "home"
+
+[services.tx]
+type = "tencent"
+protocol = "ipv6"
+# https://cloud.tencent.com/document/product/598/13674
+access_key = ""
+secret_key = ""
+# ECDN
+# https://cloud.tencent.com/document/product/228/3149
+domain = "home.example.com"
+
+[services.al]
+type = "alibaba"
+protocol = "ipv6"
+# https://help.aliyun.com/zh/ram/getting-started/create-a-ram-user-1
+access_key = ""
+secret_key = ""
+# DCDN
+# https://help.aliyun.com/document_detail/64927.html
+domain = "home.example.com"

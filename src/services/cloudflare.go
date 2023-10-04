@@ -80,7 +80,7 @@ func (ctx *cloudflare) getRecord(zoneID, recordType string) (record, bool) {
 		return record{}, false
 	}
 
-	if len(resp.Result) == 0 {
+	if len(resp.Result) != 1 {
 		ctx.Logger.Error("Get DNS records failed:", ctx.Config.Zone)
 		return record{}, false
 	}
@@ -88,7 +88,7 @@ func (ctx *cloudflare) getRecord(zoneID, recordType string) (record, bool) {
 	return resp.Result[0], true
 }
 
-func (ctx *cloudflare) updateRecord(record record, addr string) {
+func (ctx *cloudflare) updateRecord(record record, addr string) bool {
 	url := ctx.Entrypoint + "{zoneID}/dns_records/{recordID}"
 
 	r, err := ctx.Client.R().
@@ -109,11 +109,12 @@ func (ctx *cloudflare) updateRecord(record record, addr string) {
 
 	if err != nil {
 		ctx.Logger.Error("Update DNS record failed:", err)
-		return
+		return false
 	}
+	return true
 }
 
-func (config *Cloudflare) Run() {
+func (config *Cloudflare) Run() bool {
 	client := resty.New().
 		SetRetryCount(3).
 		SetAuthToken(config.Token)
@@ -132,7 +133,7 @@ func (config *Cloudflare) Run() {
 
 	zoneID, ok := ctx.getZoneID()
 	if !ok {
-		return
+		return false
 	}
 
 	recordType := ""
@@ -149,19 +150,23 @@ func (config *Cloudflare) Run() {
 
 	default:
 		ctx.Logger.Error("Unknown protocol:", ctx.Config.Protocol)
-		return
+		return false
 	}
 
 	record, ok := ctx.getRecord(zoneID, recordType)
 	if !ok {
-		return
+		return false
 	}
 	if record.Content == addr {
 		ctx.Logger.Info("No need to update")
-		return
+		return true
 	}
 
-	ctx.updateRecord(record, addr)
+	if ok := ctx.updateRecord(record, addr); !ok {
+		ctx.Logger.Info("Update DNS record failed")
+		return false
+	}
 
 	ctx.Logger.Info("Update DNS record success")
+	return true
 }

@@ -34,10 +34,12 @@ func Worker(raw []byte) {
 	go func() {
 		for {
 			time.Sleep(time.Second)
+
 			select {
 			case s := <-core.Store.ServiceStats:
 				ctx.Logger.Debug(s)
 				core.Store.ServiceStats2 = append(core.Store.ServiceStats2, s)
+
 			default:
 				continue
 			}
