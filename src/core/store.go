@@ -15,6 +15,7 @@ type store struct {
 	RunningService *sync.Map
 }
 
+// TODO: memory leak, need to limit the size of ServiceStats2
 var Store = store{
 	ServiceStats:   make(chan *ServiceStats),
 	ServiceStats2:  make([]*ServiceStats, 0),
