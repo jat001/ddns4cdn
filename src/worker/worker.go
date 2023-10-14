@@ -32,13 +32,22 @@ func Worker(raw []byte) {
 	core.Log.SetLevel(config.Log.Level)
 
 	go func() {
+		core.Store.ServiceMap = make(map[string][]*core.ServiceStats, len(config.Services))
+
 		for {
 			time.Sleep(time.Second)
 
 			select {
-			case s := <-core.Store.ServiceStats:
-				ctx.Logger.Debug(s)
-				core.Store.ServiceStats2 = append(core.Store.ServiceStats2, s)
+			case s := <-core.Store.ServiceChan:
+				if config.Store.Limit > 0 {
+					if c := cap(core.Store.ServiceMap[s.ID]); c == 0 {
+						core.Store.ServiceMap[s.ID] = make([]*core.ServiceStats, 0, config.Store.Limit)
+					} else if l := len(core.Store.ServiceMap[s.ID]); l >= c {
+						core.Store.ServiceMap[s.ID] = core.Store.ServiceMap[s.ID][l-c+1:]
+					}
+				}
+
+				core.Store.ServiceMap[s.ID] = append(core.Store.ServiceMap[s.ID], s)
 
 			default:
 				continue

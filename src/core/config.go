@@ -4,6 +4,9 @@ type Config struct {
 	Log struct {
 		Level string
 	}
+	Store struct {
+		Limit uint16
+	}
 	API struct {
 		Port uint16
 	}

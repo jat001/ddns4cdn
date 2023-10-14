@@ -14,7 +14,7 @@ func API(config *core.Config) {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	Service(e)
+	GraphQL(e)
 
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", config.API.Port)))
 }

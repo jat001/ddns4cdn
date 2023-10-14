@@ -89,7 +89,7 @@ func Service(config *core.Config) {
 			"submoule": "service",
 		}),
 		Config:   config,
-		Services: make(map[string]*services.Services),
+		Services: make(map[string]*services.Services, len(config.Services)),
 	}
 
 	ctx.parseConfig()

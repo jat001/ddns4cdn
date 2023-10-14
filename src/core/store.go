@@ -1,23 +1,25 @@
 package core
 
-import "sync"
+import (
+	"sync"
+	"time"
+)
 
 type ServiceStats struct {
 	ID      string
 	Type    string
 	Success bool
-	EndTime int64
+	EndTime time.Time
 }
 
 type store struct {
-	ServiceStats   chan *ServiceStats
-	ServiceStats2  []*ServiceStats
+	ServiceChan    chan *ServiceStats
+	ServiceMap     map[string][]*ServiceStats
 	RunningService *sync.Map
 }
 
-// TODO: memory leak, need to limit the size of ServiceStats2
 var Store = store{
-	ServiceStats:   make(chan *ServiceStats),
-	ServiceStats2:  make([]*ServiceStats, 0),
+	ServiceChan:    make(chan *ServiceStats),
+	ServiceMap:     make(map[string][]*ServiceStats),
 	RunningService: &sync.Map{},
 }

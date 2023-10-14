@@ -26,11 +26,11 @@ func Run(ctx *Services, id string) {
 	ok := (*ctx).Run()
 
 	c := core.GetRealStruct(ctx)
-	core.Store.ServiceStats <- &core.ServiceStats{
+	core.Store.ServiceChan <- &core.ServiceStats{
 		ID:      id,
 		Type:    c.FieldByName("Type").String(),
 		Success: ok,
-		EndTime: time.Now().Unix(),
+		EndTime: time.Now(),
 	}
 
 	if ok := running.CompareAndSwap(id, true, false); !ok {

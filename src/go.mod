@@ -8,6 +8,7 @@ require (
 	github.com/alibabacloud-go/tea v1.2.1
 	github.com/antonfisher/nested-logrus-formatter v1.3.1
 	github.com/go-resty/resty/v2 v2.9.1
+	github.com/graphql-go/graphql v0.8.1
 	github.com/labstack/echo/v4 v4.11.1
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/pelletier/go-toml/v2 v2.1.0
