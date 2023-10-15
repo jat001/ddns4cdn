@@ -1,20 +1,20 @@
 module github.com/jat001/ddns4cdn
 
-go 1.21.2
+go 1.21.3
 
 require (
 	github.com/alibabacloud-go/darabonba-openapi/v2 v2.0.4
-	github.com/alibabacloud-go/dcdn-20180115/v2 v2.4.0
+	github.com/alibabacloud-go/dcdn-20180115/v2 v2.5.0
 	github.com/alibabacloud-go/tea v1.2.1
 	github.com/antonfisher/nested-logrus-formatter v1.3.1
-	github.com/go-resty/resty/v2 v2.9.1
+	github.com/go-resty/resty/v2 v2.10.0
 	github.com/graphql-go/graphql v0.8.1
-	github.com/labstack/echo/v4 v4.11.1
+	github.com/labstack/echo/v4 v4.11.2
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/pelletier/go-toml/v2 v2.1.0
 	github.com/sirupsen/logrus v1.9.3
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.759
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.759
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.765
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.765
 )
 
 require (
@@ -38,7 +38,7 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
 	golang.org/x/crypto v0.14.0 // indirect
-	golang.org/x/net v0.15.0 // indirect
+	golang.org/x/net v0.17.0 // indirect
 	golang.org/x/sys v0.13.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
