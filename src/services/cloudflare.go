@@ -33,22 +33,20 @@ func (ctx *cloudflare) getZoneID() (string, bool) {
 		} `json:"result"`
 	}{}
 
-	r, err := ctx.Client.R().
+	_, err := ctx.Client.R().
 		SetQueryParams(map[string]string{
 			"name": ctx.Config.Zone,
 		}).
 		SetResult(&resp).
 		Get(url)
 
-	ctx.Logger.Debug(r.String())
-
 	if err != nil {
-		ctx.Logger.Error("Get zone id failed:", err)
+		ctx.Logger.Error("Get zone id failed: ", err)
 		return "", false
 	}
 
 	if len(resp.Result) == 0 {
-		ctx.Logger.Error("Zone not found:", r.Body())
+		ctx.Logger.Error("Zone not found")
 		return "", false
 	}
 
@@ -62,7 +60,7 @@ func (ctx *cloudflare) getRecord(zoneID, recordType string) (record, bool) {
 		Result []record `json:"result"`
 	}{}
 
-	r, err := ctx.Client.R().
+	_, err := ctx.Client.R().
 		SetPathParams(map[string]string{
 			"zoneID": zoneID,
 		}).
@@ -73,15 +71,13 @@ func (ctx *cloudflare) getRecord(zoneID, recordType string) (record, bool) {
 		SetResult(&resp).
 		Get(url)
 
-	ctx.Logger.Debug(r.String())
-
 	if err != nil {
 		ctx.Logger.Error("Get DNS records failed:", err)
 		return record{}, false
 	}
 
-	if len(resp.Result) != 1 {
-		ctx.Logger.Error("Get DNS records failed:", ctx.Config.Zone)
+	if len(resp.Result) == 0 {
+		ctx.Logger.Error("DNS record not found")
 		return record{}, false
 	}
 
@@ -91,7 +87,7 @@ func (ctx *cloudflare) getRecord(zoneID, recordType string) (record, bool) {
 func (ctx *cloudflare) updateRecord(record record, addr string) bool {
 	url := ctx.Entrypoint + "{zoneID}/dns_records/{recordID}"
 
-	r, err := ctx.Client.R().
+	_, err := ctx.Client.R().
 		SetPathParams(map[string]string{
 			"zoneID":   record.ZoneID,
 			"recordID": record.ID,
@@ -105,12 +101,11 @@ func (ctx *cloudflare) updateRecord(record record, addr string) bool {
 		}).
 		Put(url)
 
-	ctx.Logger.Debug(r.String())
-
 	if err != nil {
-		ctx.Logger.Error("Update DNS record failed:", err)
+		ctx.Logger.Error("Update DNS record failed: ", err)
 		return false
 	}
+
 	return true
 }
 
@@ -149,7 +144,7 @@ func (config *Cloudflare) Run() bool {
 		addr = ctx.Config.ADDR6
 
 	default:
-		ctx.Logger.Error("Unknown protocol:", ctx.Config.Protocol)
+		ctx.Logger.Error("Unknown protocol: ", ctx.Config.Protocol)
 		return false
 	}
 
@@ -157,13 +152,13 @@ func (config *Cloudflare) Run() bool {
 	if !ok {
 		return false
 	}
+
 	if record.Content == addr {
 		ctx.Logger.Info("No need to update")
 		return true
 	}
 
 	if ok := ctx.updateRecord(record, addr); !ok {
-		ctx.Logger.Info("Update DNS record failed")
 		return false
 	}
 

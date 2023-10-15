@@ -26,13 +26,13 @@ func (ctx *tencent) getDomainInfo() (*cdn.BriefDomain, bool) {
 	}}
 
 	resp, err := ctx.Client.DescribeDomains(request)
-	ctx.Logger.Debug(resp.ToJsonString())
+
 	if err != nil {
 		ctx.Logger.Warn("DescribeDomains failed: ", err)
 		return &cdn.BriefDomain{}, false
 	}
 
-	if *resp.Response.TotalNumber != 1 {
+	if *resp.Response.TotalNumber == 0 {
 		ctx.Logger.Warn("Domain not found")
 		return &cdn.BriefDomain{}, false
 	}
@@ -48,8 +48,8 @@ func (ctx *tencent) updateOrigin(addr string) bool {
 	request.Route = common.StringPtr("Origin.Origins")
 	request.Value = common.StringPtr(string(v))
 
-	resp, err := ctx.Client.ModifyDomainConfig(request)
-	ctx.Logger.Debug(resp.ToJsonString())
+	_, err := ctx.Client.ModifyDomainConfig(request)
+
 	if err != nil {
 		ctx.Logger.Warn("ModifyDomainConfig failed: ", err)
 		return false
@@ -92,7 +92,7 @@ func (config *Tencent) Run() bool {
 		addr = ctx.Config.ADDR6
 
 	default:
-		ctx.Logger.Error("Unknown protocol:", ctx.Config.Protocol)
+		ctx.Logger.Error("Unknown protocol: ", ctx.Config.Protocol)
 		return false
 	}
 
@@ -133,7 +133,6 @@ func (config *Tencent) Run() bool {
 		return false
 	}
 
-	ctx.Logger.Info("Update source host success")
-
+	ctx.Logger.Info("Update origin host success")
 	return true
 }

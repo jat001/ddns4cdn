@@ -21,26 +21,26 @@ func (ctx *alibaba) getDomainInfo() (*dcdn.DescribeDcdnDomainDetailResponseBodyD
 	resp, err := ctx.Client.DescribeDcdnDomainDetail(&dcdn.DescribeDcdnDomainDetailRequest{
 		DomainName: tea.String(ctx.Config.Domain),
 	})
-	s, _ := json.Marshal(resp)
-	ctx.Logger.Debug(string(s))
+
 	if err != nil {
 		ctx.Logger.Warn("DescribeDcdnDomainDetail failed: ", err)
 		return &dcdn.DescribeDcdnDomainDetailResponseBodyDomainDetail{}, false
 	}
+
 	return resp.Body.DomainDetail, true
 }
 
 func (ctx *alibaba) updateSource(sources string) bool {
-	resp, err := ctx.Client.UpdateDcdnDomain(&dcdn.UpdateDcdnDomainRequest{
+	_, err := ctx.Client.UpdateDcdnDomain(&dcdn.UpdateDcdnDomainRequest{
 		DomainName: tea.String(ctx.Config.Domain),
 		Sources:    tea.String(sources),
 	})
-	s, _ := json.Marshal(resp)
-	ctx.Logger.Debug(string(s))
+
 	if err != nil {
 		ctx.Logger.Warn("UpdateDcdnDomain failed: ", err)
 		return false
 	}
+
 	return true
 }
 
@@ -71,7 +71,7 @@ func (config *Alibaba) Run() bool {
 		addr = ctx.Config.ADDR6
 
 	default:
-		ctx.Logger.Warn("Unknown protocol:", ctx.Config.Protocol)
+		ctx.Logger.Warn("Unknown protocol: ", ctx.Config.Protocol)
 		return false
 	}
 
@@ -115,12 +115,14 @@ func (config *Alibaba) Run() bool {
 		ctx.Logger.Info("No need to update")
 		return true
 	}
-	info.Sources.Source[main].Content = tea.String(addr)
 
+	info.Sources.Source[main].Content = tea.String(addr)
 	sources, _ := json.Marshal(info.Sources.Source)
+
 	if ok := ctx.updateSource(string(sources)); !ok {
 		return false
 	}
 
+	ctx.Logger.Info("Update origin host success")
 	return true
 }
