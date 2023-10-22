@@ -1,8 +1,8 @@
 package api
 
 import (
+	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 
 	"github.com/graphql-go/graphql"
@@ -10,6 +10,16 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
+
+func GraphQLError(message string) map[string][]map[string]string {
+	return map[string][]map[string]string{
+		"errors": {
+			{
+				"message": message,
+			},
+		},
+	}
+}
 
 func GraphQL(c echo.Context) error {
 	schema, err := graphql.NewSchema(graphql.SchemaConfig{
@@ -21,13 +31,23 @@ func GraphQL(c echo.Context) error {
 		}),
 	})
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err)
+		return c.JSON(http.StatusInternalServerError, GraphQLError(err.Error()))
 	}
 
-	req, _ := io.ReadAll(c.Request().Body)
+	req := make(map[string]any)
+	err = json.NewDecoder(c.Request().Body).Decode(&req)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, GraphQLError("Problems parsing JSON: "+err.Error()))
+	}
+
+	query, ok := req["query"].(string)
+	if !ok {
+		return c.JSON(http.StatusBadRequest, GraphQLError("A query attribute must be specified and must be a string."))
+	}
+
 	params := graphql.Params{
 		Schema:        schema,
-		RequestString: string(req),
+		RequestString: query,
 	}
 
 	res := graphql.Do(params)
