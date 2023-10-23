@@ -24,7 +24,7 @@ func GraphQLError(message string) map[string][]map[string]string {
 func GraphQL(c echo.Context) error {
 	schema, err := graphql.NewSchema(graphql.SchemaConfig{
 		Query: graphql.NewObject(graphql.ObjectConfig{
-			Name: "Query",
+			Name: "query",
 			Fields: graphql.Fields{
 				"history": historyQuery(),
 			},
@@ -64,6 +64,7 @@ func API(config *core.Config) {
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+	e.Use(middleware.CORS())
 
 	e.POST("/graphql", GraphQL)
 
