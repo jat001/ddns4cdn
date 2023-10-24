@@ -10,6 +10,8 @@ import (
 
 func main() {
 	config := flag.String("c", "config.toml", "config file path")
+	flag.Parse()
+
 	data, err := os.ReadFile(*config)
 	if err != nil {
 		fmt.Println(err)

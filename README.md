@@ -2,23 +2,33 @@
 
 自动获取本机 IP 并更新 CDN 源站地址，同时支持 IPV4 和 IPV6。
 
-## 已支持的厂商
+## Supported Cloud Services
 
 - Cloudflare
-- 腾讯云 ECDN
-- 阿里云 DCDN
+- Alibaba Cloud ECDN
+- Tencent Cloud DCDN
 
-## 配置
+## Config
 
-参考[示例](/config.example.toml)
+See [example](/config.example.toml)
 
-## 运行
+## Run
 
 ```shell
 ./ddns4cdn -c config.toml
 ```
 
-## Build for mobile
+## Build
+
+### Desktop
+
+```shell
+go build -C src -o ../ddns4cdn[.exe]
+```
+
+Set `GOOS` and `GOARCH` to build for other platforms.
+
+### Mobile
 
 ```shell
 cd src
