@@ -14,6 +14,13 @@
 
 ## 运行
 
-```
+```shell
 ./ddns4cdn -c config.toml
+```
+
+## Build for mobile
+
+```shell
+cd src
+gomobile bind -o ../ddns4cdn.aar -target=android -androidapi 33 ./worker
 ```
