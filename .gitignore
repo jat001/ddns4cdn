@@ -21,3 +21,11 @@
 go.work
 
 config.toml
+
+*.aar
+*.jar
+*.apk
+*.xcframework
+*.app
+
+.DS_Store

@@ -32,5 +32,6 @@ Set `GOOS` and `GOARCH` to build for other platforms.
 
 ```shell
 cd src
-gomobile bind -o ../ddns4cdn.aar -target=android -androidapi 33 ./worker
+gomobile bind -o ../ddns4cdn.aar -target android -javapkg ddns4cdn -androidapi 33 ./worker
+gomobile bind -o ../ddns4cdn.xcframework -target ios -prefix Ddns4cdn -iosversion 17 ./worker
 ```
