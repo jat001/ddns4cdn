@@ -1,0 +1,5 @@
+module Worker {
+    header "worker.h"
+    link "worker"
+    export *
+}
