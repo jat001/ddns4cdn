@@ -20,7 +20,7 @@ See [example](/config.example.toml)
 
 ## Build
 
-### Desktop
+### Executable
 
 ```shell
 go build -C src -o ../ddns4cdn[.exe]
@@ -28,10 +28,18 @@ go build -C src -o ../ddns4cdn[.exe]
 
 Set `GOOS` and `GOARCH` to build for other platforms.
 
-### Mobile
+### Library
 
 ```shell
+go build -C src -o ../ddns4cdn.a -buildmode=c-archive ./cgo/go
+# Mac
+clang -o ddns4cdn src/cgo/c/main.c ddns4cdn.a -framework CoreFoundation -framework Security -lresolv
+
+go build -C src -o ../ddns4cdn.so -buildmode=c-shared ./cgo/go
+# Mac
+clang -o ddns4cdn_dl src/cgo/c/main.c ddns4cdn.so
+
 cd src
 gomobile bind -o ../ddns4cdn.aar -target android -javapkg ddns4cdn -androidapi 33 ./worker
-gomobile bind -o ../ddns4cdn.xcframework -target ios -prefix Ddns4cdn -iosversion 17 ./worker
+gomobile bind -o ../Ddns4cdn.xcframework -target ios,macos -prefix Ddns4cdn -iosversion 17 ./worker
 ```
