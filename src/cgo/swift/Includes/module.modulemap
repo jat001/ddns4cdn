@@ -1,5 +1,4 @@
 module Worker {
-    header "worker.h"
-    link "worker"
+    header "../../../../build/ddns4cdn.h"
     export *
 }

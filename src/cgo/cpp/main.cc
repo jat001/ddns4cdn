@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "../../../ddns4cdn.h"
+#include "../../../build/ddns4cdn.h"
 
 int main(int argc, char *argv[])
 {
@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
         std::istreambuf_iterator<char>());
     file.close();
 
-    Worker(const_cast<char *>(data.c_str()));
+    Ddns4cdnWorker(const_cast<char *>(data.c_str()));
 
     return 0;
 }

@@ -9,6 +9,6 @@ struct Ddns4cdn: ParsableCommand {
 
     mutating func run() throws {
         let data = try String(contentsOfFile: config)
-        Worker(strdup(data))
+        Ddns4cdnWorker(strdup(data))
     }
 }

@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 
-#import "../../../ddns4cdn.h"
+#import "../../../build/ddns4cdn.h"
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
@@ -14,7 +14,7 @@ int main(int argc, const char * argv[]) {
             return 1;
         }
 
-        Worker((char *)[data UTF8String]);
+        Ddns4cdnWorker((char *)[data UTF8String]);
     }
     return 0;
 }

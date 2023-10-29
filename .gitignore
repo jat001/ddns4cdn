@@ -18,7 +18,7 @@
 # vendor/
 
 # Go workspace file
-go.work
+# go.work
 
 config.toml
 
@@ -29,3 +29,4 @@ config.toml
 *.app
 
 .DS_Store
+build/

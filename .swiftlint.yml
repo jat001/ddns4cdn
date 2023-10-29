@@ -1,0 +1,6 @@
+included:
+  - src/cgo/swift
+excluded:
+  - "**/.build"
+disabled_rules:
+  - trailing_comma

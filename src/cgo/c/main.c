@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../../../ddns4cdn.h"
+#include "../../../build/ddns4cdn.h"
 
 int main(int argc, char *argv[])
 {
@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
     fclose(fp);
     data[size] = '\0';
 
-    Worker(data);
+    Ddns4cdnWorker(data);
 
     return 0;
 }
