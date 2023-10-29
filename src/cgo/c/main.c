@@ -32,7 +32,6 @@ int main(int argc, char *argv[])
 
     fread(data, 1, size, fp);
     fclose(fp);
-
     data[size] = '\0';
 
     Worker(data);

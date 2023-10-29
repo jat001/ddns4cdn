@@ -34,10 +34,12 @@ Set `GOOS` and `GOARCH` to build for other platforms.
 go build -C src -o ../ddns4cdn.a -buildmode=c-archive ./cgo/go
 # Mac
 clang -o ddns4cdn src/cgo/c/main.c ddns4cdn.a -framework CoreFoundation -framework Security -lresolv
+clang++ -o ddns4cdn_cc src/cgo/cpp/main.cc ddns4cdn.a -framework CoreFoundation -framework Security -lresolv
 
 go build -C src -o ../ddns4cdn.so -buildmode=c-shared ./cgo/go
 # Mac
 clang -o ddns4cdn_dl src/cgo/c/main.c ddns4cdn.so
+clang++ -o ddns4cdn_cc_dl src/cgo/cpp/main.cc ddns4cdn.so
 
 cd src
 gomobile bind -o ../ddns4cdn.aar -target android -javapkg ddns4cdn -androidapi 33 ./worker
