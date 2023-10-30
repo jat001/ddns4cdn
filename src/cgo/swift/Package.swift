@@ -11,6 +11,10 @@ let package = Package(
             name: "ddns4cdn",
             targets: ["main"]
         ),
+        .executable(
+            name: "ddns4cdn_dl",
+            targets: ["main_dl"]
+        ),
     ],
     dependencies: [
         .package(
@@ -32,7 +36,30 @@ let package = Package(
                 ),
                 .target(name: "worker"),
             ],
-            path: "Sources"
+            path: "Sources",
+            linkerSettings: [
+                .unsafeFlags([
+                    "../../../build/ddns4cdn.a",
+                    "-lresolv",
+                ]),
+            ]
+        ),
+        .executableTarget(
+            name: "main_dl",
+            dependencies: [
+                .product(
+                    name: "ArgumentParser",
+                    package: "swift-argument-parser"
+                ),
+                .target(name: "worker"),
+            ],
+            // just a symlink to Sources to make SwiftPM happy
+            path: "SourcesDl",
+            linkerSettings: [
+                .unsafeFlags([
+                    "../../../build/ddns4cdn.so",
+                ]),
+            ]
         ),
     ]
 )

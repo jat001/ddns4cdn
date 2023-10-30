@@ -55,14 +55,6 @@ clang++ -o build/ddns4cdn_cpp src/cgo/cpp/main.cc build/ddns4cdn.a -framework Co
 clang -o build/ddns4cdn_objc src/cgo/objc/main.m build/ddns4cdn.a -framework Foundation -framework Security -lresolv
 ```
 
-Swift:
-
-```shell
-cd src/cgo/swift
-# the output binary is .build/release/ddns4cdn
-swift build -c release -Xlinker ../../../build/ddns4cdn.a -Xlinker -lresolv
-```
-
 #### Shared library
 
 ```shell
@@ -83,14 +75,16 @@ clang -o build/ddns4cdn_dl_objc src/cgo/objc/main.m build/ddns4cdn.so -framework
 export DYLD_LIBRARY_PATH=$(realpath build)
 ```
 
-Swift:
+#### Swift
 
 ```shell
 cd src/cgo/swift
 # the output binary is .build_dl/release/ddns4cdn
-swift build --scratch-path .build_dl -c release -Xlinker ../../../build/ddns4cdn.so
+# and .build_dl/release/ddns4cdn_dl
+swift build -c release
 
-# set DYLD_LIBRARY_PATH to load shared library
+# to use ddns4cdn_dl, set DYLD_LIBRARY_PATH to load shared library
+# ddns4cdn linked a static library, so you don't need to set it
 export DYLD_LIBRARY_PATH=$(realpath ../../../build)
 ```
 
