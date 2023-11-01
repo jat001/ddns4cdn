@@ -86,6 +86,7 @@ clang -o build/ddns4cdn_objc src/cgo/objc/main.m build/ddns4cdn.a -framework Fou
 
 ```powershell
 & "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\Tools\Launch-VsDevShell.ps1" -Arch amd64 -HostArch amd64
+
 # C
 cl /MD /Fe"build\ddns4cdn_msvc_c.exe" /Fo"build\ddns4cdn_msvc_c.exe.obj" src\cgo\c\main.c /link build\ddns4cdn.a
 # C++
@@ -125,6 +126,7 @@ export DYLD_LIBRARY_PATH=$(realpath build)
 
 ```powershell
 & "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\Tools\Launch-VsDevShell.ps1" -Arch amd64 -HostArch amd64
+# can't build .dll using .so, still use .a (static library)
 cl /LD /MD /Fe"build\ddns4cdn.dll" /Fo"build\ddns4cdn.dll.obj" src\cgo\msvc\ddns4cdn.c /link /DEF:src\cgo\msvc\ddns4cdn.def build\ddns4cdn.a
 
 # C
