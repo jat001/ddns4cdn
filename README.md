@@ -139,8 +139,8 @@ cl /EHsc /Fe"build\ddns4cdn_msvc_dl_cpp.exe" /Fo"build\ddns4cdn_msvc_dl_cpp.exe.
 
 ```shell
 cd src/cgo/swift
-# the output binary is .build_dl/release/ddns4cdn
-# and .build_dl/release/ddns4cdn_dl
+# the output binary is .build/release/ddns4cdn
+# and .build/release/ddns4cdn_dl
 swift build -c release
 
 # to use ddns4cdn_dl, set DYLD_LIBRARY_PATH to load shared library
@@ -154,7 +154,11 @@ export DYLD_LIBRARY_PATH=$(realpath ../../../build)
 
 Android:
 
+Android SDK Command-Line Tools
+
 iOS:
+
+Xcode Command Line Tools
 
 #### Install gomobile
 
