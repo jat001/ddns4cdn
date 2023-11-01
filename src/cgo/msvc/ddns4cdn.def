@@ -1,0 +1,3 @@
+EXPORTS
+	_rt0_amd64_windows_lib
+	Ddns4cdnWorker

@@ -38,13 +38,40 @@ Set `GOOS` and `GOARCH` to build for other platforms.
 
 ### Library
 
+#### Requirements
+
+##### Windows
+
+- [Mingw-w64](https://www.mingw-w64.org/downloads/) (GCC, required for `go build`)
+
+- Build Tools for Visual Studio (MSVC, optional)
+
+##### macOS
+
+- GCC (`go build` can use GCC or Clang)
+
+- Xcode Command Line Tools (set `CC=clang` to use Clang)
+
+##### Linux
+
+- GCC
+
 #### Static library
 
 ```shell
 go build -o build/ddns4cdn.a -buildmode=c-archive ./src/cgo/go
 ```
 
-macOS:
+##### GCC
+
+```shell
+# C
+gcc -o build/ddns4cdn_c src/cgo/c/main.c build/ddns4cdn.a
+# C++
+g++ -o build/ddns4cdn_cpp src/cgo/cpp/main.cc build/ddns4cdn.a
+```
+
+##### Clang
 
 ```shell
 # C
@@ -55,13 +82,32 @@ clang++ -o build/ddns4cdn_cpp src/cgo/cpp/main.cc build/ddns4cdn.a -framework Co
 clang -o build/ddns4cdn_objc src/cgo/objc/main.m build/ddns4cdn.a -framework Foundation -framework Security -lresolv
 ```
 
+##### MSVC
+
+```powershell
+& "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\Tools\Launch-VsDevShell.ps1" -Arch amd64 -HostArch amd64
+# C
+cl /MD /Fe"build\ddns4cdn_msvc_c.exe" /Fo"build\ddns4cdn_msvc_c.exe.obj" src\cgo\c\main.c /link build\ddns4cdn.a
+# C++
+cl /EHsc /MD /Fe"build\ddns4cdn_msvc_cpp.exe" /Fo"build\ddns4cdn_msvc_cpp.exe.obj" src\cgo\cpp\main.cc /link build\ddns4cdn.a
+```
+
 #### Shared library
 
 ```shell
 go build -o build/ddns4cdn.so -buildmode=c-shared ./src/cgo/go
 ```
 
-macOS:
+##### GCC (Windows & Linux)
+
+```shell
+# C
+gcc -o build/ddns4cdn_dl_c src/cgo/c/main.c build/ddns4cdn.so
+# C++
+g++ -o build/ddns4cdn_dl_cpp src/cgo/cpp/main.cc build/ddns4cdn.so
+```
+
+##### Clang (macOS)
 
 ```shell
 # C
@@ -73,6 +119,18 @@ clang -o build/ddns4cdn_dl_objc src/cgo/objc/main.m build/ddns4cdn.so -framework
 
 # set DYLD_LIBRARY_PATH to load shared library
 export DYLD_LIBRARY_PATH=$(realpath build)
+```
+
+##### MSVC
+
+```powershell
+& "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\Tools\Launch-VsDevShell.ps1" -Arch amd64 -HostArch amd64
+cl /LD /MD /Fe"build\ddns4cdn.dll" /Fo"build\ddns4cdn.dll.obj" src\cgo\msvc\ddns4cdn.c /link /DEF:src\cgo\msvc\ddns4cdn.def build\ddns4cdn.a
+
+# C
+cl /Fe"build\ddns4cdn_msvc_dl_c.exe" /Fo"build\ddns4cdn_msvc_dl_c.exe.obj" src\cgo\c\main.c /link build\ddns4cdn.lib
+# C++
+cl /EHsc /Fe"build\ddns4cdn_msvc_dl_cpp.exe" /Fo"build\ddns4cdn_msvc_dl_cpp.exe.obj" src\cgo\cpp\main.cc /link build\ddns4cdn.lib
 ```
 
 #### Swift
@@ -90,10 +148,20 @@ export DYLD_LIBRARY_PATH=$(realpath ../../../build)
 
 ### Go mobile
 
+#### Requirements
+
+Android:
+
+iOS:
+
+#### Install gomobile
+
 ```shell
 go install golang.org/x/mobile/cmd/gomobile@latest
 gomobile init
 ```
+
+#### Build
 
 ```shell
 cd src/gomobile
