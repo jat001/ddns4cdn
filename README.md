@@ -5,7 +5,9 @@
 ## Supported Cloud Services
 
 - Cloudflare
+
 - Alibaba Cloud ECDN
+
 - Tencent Cloud DCDN
 
 ## Config
@@ -44,17 +46,17 @@ Set `GOOS` and `GOARCH` to build for other platforms.
 
 - [Mingw-w64](https://www.mingw-w64.org/downloads/) (GCC, required for `go build`)
 
-- Build Tools for Visual Studio (MSVC, optional. `go build` doesn't support MSVC, but you can use MSVC to build exe and dll)
+  [WinLibs](https://winlibs.com/#download-release)'s build is recommended, tested with MCF and UCRT.
 
-##### macOS
+- [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/)  (MSVC, optional)
 
-- GCC (`go build` can use GCC or Clang)
+  `go build` doesn't support MSVC, but you can use MSVC to build exe and dll.
 
-- Xcode Command Line Tools (set `CC=clang` to use Clang for `go build`)
+##### macOS / Linux
 
-##### Linux
+GCC or Clang
 
-- GCC
+`go build` can use GCC or Clang. Default is GCC, set `CC=clang` to use Clang.
 
 #### Static library
 
@@ -91,9 +93,9 @@ clang -o build/ddns4cdn_objc src/cgo/objc/main.m build/ddns4cdn.a -framework Fou
 & "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\Tools\Launch-VsDevShell.ps1" -Arch amd64 -HostArch amd64
 
 # C
-cl /MD /Fe"build\ddns4cdn_msvc_c.exe" /Fo"build\ddns4cdn_msvc_c.exe.obj" src\cgo\c\main.c /link build\ddns4cdn.a
+cl /MD /Fe"build\ddns4cdn_msvc_c.exe" /Fo"build\ddns4cdn_msvc_c.obj" src\cgo\c\main.c /link build\ddns4cdn.a
 # C++
-cl /EHsc /MD /Fe"build\ddns4cdn_msvc_cpp.exe" /Fo"build\ddns4cdn_msvc_cpp.exe.obj" src\cgo\cpp\main.cc /link build\ddns4cdn.a
+cl /EHsc /MD /Fe"build\ddns4cdn_msvc_cpp.exe" /Fo"build\ddns4cdn_msvc_cpp.obj" src\cgo\cpp\main.cc /link build\ddns4cdn.a
 ```
 
 #### Shared library
@@ -129,17 +131,34 @@ export DYLD_LIBRARY_PATH=$(realpath build)
 
 ##### MSVC
 
+Building a dynamic-link library (.dll) requires a static library (.a) as a link file.
+
+See the previous section for how to build a static library.
+
+```shell
+
 ```powershell
 # only supports amd64
 & "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\Tools\Launch-VsDevShell.ps1" -Arch amd64 -HostArch amd64
-# can't build .dll using .so, still use .a
-# see the previous section for how to build a static library
-cl /LD /MD /Fe"build\ddns4cdn.dll" /Fo"build\ddns4cdn.dll.obj" src\cgo\msvc\ddns4cdn.c /link /DEF:src\cgo\msvc\ddns4cdn.def build\ddns4cdn.a
+
+# DLL
+cl /LD /MD /Fe"build\ddns4cdn.dll" /Fo"build\ddns4cdn.obj" src\cgo\msvc\ddns4cdn.c /link /DEF:src\cgo\msvc\ddns4cdn.def build\ddns4cdn.a
 
 # C
-cl /Fe"build\ddns4cdn_msvc_dl_c.exe" /Fo"build\ddns4cdn_msvc_dl_c.exe.obj" src\cgo\c\main.c /link build\ddns4cdn.lib
+cl /DNO_CGO_LIB /Fe"build\ddns4cdn_msvc_dl_c.exe" /Fo"build\ddns4cdn_msvc_dl_c.obj" src\cgo\c\main.c /link build\ddns4cdn.lib
 # C++
-cl /EHsc /Fe"build\ddns4cdn_msvc_dl_cpp.exe" /Fo"build\ddns4cdn_msvc_dl_cpp.exe.obj" src\cgo\cpp\main.cc /link build\ddns4cdn.lib
+cl /DNO_CGO_LIB /EHsc /Fe"build\ddns4cdn_msvc_dl_cpp.exe" /Fo"build\ddns4cdn_msvc_dl_cpp.obj" src\cgo\cpp\main.cc /link build\ddns4cdn.lib
+```
+
+#### C\#
+
+Compiling C# code requires a dynamic-link library (.dll).
+
+See the previous section for how to build a dll.
+
+```shell
+cd src/cgo/csharp
+dotnet publish
 ```
 
 #### Swift

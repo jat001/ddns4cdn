@@ -50,8 +50,6 @@ func (ctx *service) parseConfig() {
 
 		ctx.Services[k] = &service
 	}
-
-	ctx.Logger.Debug("Services:", ctx.Services)
 }
 
 func (ctx *service) run() {
