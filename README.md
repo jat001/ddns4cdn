@@ -178,27 +178,22 @@ export DYLD_LIBRARY_PATH=$(realpath ../../../build)
 
 #### Requirements
 
+[Go Mobile](https://github.com/golang/go/wiki/Mobile)
+
 Android:
 
-Android SDK Command-Line Tools
+[Android SDK Command-Line Tools](https://developer.android.com/tools/)
 
 iOS:
 
-Xcode Command Line Tools
-
-#### Install gomobile
-
-```shell
-go install golang.org/x/mobile/cmd/gomobile@latest
-gomobile init
-```
+[Xcode Command Line Tools](https://developer.apple.com/xcode/resources/)
 
 #### Build
 
 ```shell
 cd src/gomobile
 # Android
-gomobile bind -o ../../build/ddns4cdn.aar -target android -javapkg ddns4cdn -androidapi 33
+gomobile bind -o ../../build/ddns4cdn.aar -target android -javapkg ddns4cdn -androidapi 34
 # iOS and macOS
 gomobile bind -o ../../build/Ddns4cdn.xcframework -target ios,macos -prefix Ddns4cdn -iosversion 17
 ```
