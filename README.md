@@ -56,7 +56,7 @@ Set `GOOS` and `GOARCH` to build for other platforms.
 
 GCC or Clang
 
-`go build` can use GCC or Clang. Default is GCC, set `CC=clang` to use Clang.
+`go build` can use GCC or Clang, set `CC` to switch.
 
 #### Static library
 
