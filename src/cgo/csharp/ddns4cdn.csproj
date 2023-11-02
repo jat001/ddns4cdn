@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>ddns4cdn_cs</AssemblyName>
+    <AssemblyName>ddns4cdn_csharp</AssemblyName>
     <Configuration>Release</Configuration>
     <ImplicitUsings>enable</ImplicitUsings>
     <OutputType>Exe</OutputType>
