@@ -3,7 +3,7 @@ module github.com/jat001/ddns4cdn/gomobile
 go 1.21.3
 
 require (
-	github.com/jat001/ddns4cdn v0.0.0-20231029051433-61951255eef3
+	github.com/jat001/ddns4cdn v0.0.0-20231102223600-a4ee983f1854
 	golang.org/x/mobile v0.0.0-20231006135142-2b44d11868fe
 )
 
@@ -34,8 +34,8 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pelletier/go-toml/v2 v2.1.0 // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.775 // indirect
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.775 // indirect
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.781 // indirect
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.781 // indirect
 	github.com/tjfoc/gmsm v1.4.1 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect

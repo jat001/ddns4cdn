@@ -13,8 +13,8 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/pelletier/go-toml/v2 v2.1.0
 	github.com/sirupsen/logrus v1.9.3
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.775
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.775
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.781
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.781
 )
 
 require (

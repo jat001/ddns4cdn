@@ -30,3 +30,6 @@ config.toml
 
 .DS_Store
 build/
+*.sln
+go.sum
+go.work.sum
