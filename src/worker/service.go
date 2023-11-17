@@ -1,6 +1,7 @@
 package worker
 
 import (
+	"os"
 	"time"
 
 	"github.com/jat001/ddns4cdn/core"
@@ -92,4 +93,5 @@ func Service(config *core.Config) {
 
 	ctx.parseConfig()
 	ctx.run()
+	os.Exit(0)
 }
