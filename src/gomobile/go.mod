@@ -3,7 +3,7 @@ module github.com/jat001/ddns4cdn/gomobile
 go 1.21.3
 
 require (
-	github.com/jat001/ddns4cdn v0.0.0-20231117113413-d143737f2cb0
+	github.com/jat001/ddns4cdn v0.0.0-20231201011036-1b9cb2a48ff3
 	golang.org/x/mobile v0.0.0-20231127183840-76ac6878050a
 )
 
