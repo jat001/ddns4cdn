@@ -3,7 +3,7 @@ module github.com/jat001/ddns4cdn/gomobile
 go 1.21.3
 
 require (
-	github.com/jat001/ddns4cdn v0.0.0-20231202102205-82220366f9d3
+	github.com/jat001/ddns4cdn v0.0.0-20231220043527-5bb588f8db7f
 	golang.org/x/mobile v0.0.0-20231127183840-76ac6878050a
 )
 
@@ -21,12 +21,12 @@ require (
 	github.com/aliyun/credentials-go v1.3.2 // indirect
 	github.com/antonfisher/nested-logrus-formatter v1.3.1 // indirect
 	github.com/clbanning/mxj/v2 v2.7.0 // indirect
-	github.com/go-resty/resty/v2 v2.10.0 // indirect
+	github.com/go-resty/resty/v2 v2.11.0 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/graphql-go/graphql v0.8.1 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/labstack/echo/v4 v4.11.3 // indirect
-	github.com/labstack/gommon v0.4.1 // indirect
+	github.com/labstack/echo/v4 v4.11.4 // indirect
+	github.com/labstack/gommon v0.4.2 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
@@ -34,8 +34,8 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pelletier/go-toml/v2 v2.1.1 // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.822 // indirect
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.822 // indirect
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.829 // indirect
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.829 // indirect
 	github.com/tjfoc/gmsm v1.4.1 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect

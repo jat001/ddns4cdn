@@ -7,14 +7,14 @@ require (
 	github.com/alibabacloud-go/dcdn-20180115/v2 v2.10.0
 	github.com/alibabacloud-go/tea v1.2.1
 	github.com/antonfisher/nested-logrus-formatter v1.3.1
-	github.com/go-resty/resty/v2 v2.10.0
+	github.com/go-resty/resty/v2 v2.11.0
 	github.com/graphql-go/graphql v0.8.1
-	github.com/labstack/echo/v4 v4.11.3
+	github.com/labstack/echo/v4 v4.11.4
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/pelletier/go-toml/v2 v2.1.1
 	github.com/sirupsen/logrus v1.9.3
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.822
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.822
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.829
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.829
 )
 
 require (
@@ -29,7 +29,7 @@ require (
 	github.com/clbanning/mxj/v2 v2.7.0 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/labstack/gommon v0.4.1 // indirect
+	github.com/labstack/gommon v0.4.2 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
